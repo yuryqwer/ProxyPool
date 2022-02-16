@@ -19,18 +19,17 @@ EXCEPTIONS = (
 )
 
 
-class Tester(object):
+class Tester:
     """
     tester for testing proxies in queue
     """
-    
     def __init__(self):
         """
         init redis
         """
         self.redis = RedisClient()
         self.loop = asyncio.get_event_loop()
-    
+
     async def test(self, proxy: Proxy):
         """
         test single proxy
@@ -63,7 +62,7 @@ class Tester(object):
             except EXCEPTIONS:
                 self.redis.decrease(proxy)
                 logger.debug(f'proxy {proxy.string()} is invalid, decrease score')
-    
+
     @logger.catch
     def run(self):
         """
@@ -84,14 +83,7 @@ class Tester(object):
             if not cursor:
                 break
 
-def run_tester():
-    host = '96.113.165.182'
-    port = '3128'
-    tasks = [tester.test(Proxy(host=host, port=port))]
-    tester.loop.run_until_complete(asyncio.wait(tasks))
 
 if __name__ == '__main__':
     tester = Tester()
     tester.run()
-    # run_tester()
-
